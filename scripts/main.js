@@ -4,7 +4,7 @@ require('modules/autosave');
 
 let showConnectMessageToggle = true;
 let serverCommands;
-let saveFile
+let saveFile;
 
 Events.on(ServerLoadEvent, (e) => {
   
