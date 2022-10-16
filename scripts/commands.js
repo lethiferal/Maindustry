@@ -1,5 +1,7 @@
 Events.on(ServerLoadEvent, (e) => {
   let serverCommands;
+  let clientCommands;
+  clientCommands = Vars.netServer.clientCommands;
   serverCommands = Core.app.listeners.find(
       (l) => l instanceof Packages.mindustry.server.ServerControl
     ).handler;  
@@ -40,5 +42,19 @@ Events.on(ServerLoadEvent, (e) => {
       } else {
         Log.warn('"' + args[0] + '"' + ' is not a valid argument.');
     }})
+  );
+  clientCommands.register(
+    'pause',
+    '',
+    'Pauses or un-pauses the server.',
+    runner((args, player) => {
+      if (player.admin) {
+        let pauseToggle = Vars.state.serverPaused;
+        pauseToggle = !pauseToggle;
+        Vars.state.serverPaused = pauseToggle;
+      } else {
+        player.sendMessage('[crimson]⚠ [white]Great try but, [crimson]you are not an admin[white].');
+      }
+    })
   );
 });
