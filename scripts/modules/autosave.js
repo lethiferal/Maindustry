@@ -13,7 +13,7 @@ Timer.schedule(
     if (Core.settings.get('loadAutoSave', '') === 'true'){
       Core.app.post(() => {
         SaveIO.save(file);
-        Call.infoToast("[#7FD7FD7f]",4);
+        Call.infoPopup("[#7FD7FD7f]", 5, Align.topRight, 180, 0, 0, 10);
     })};
   },
   60,
