@@ -22,6 +22,7 @@ Events.on(ServerLoadEvent, (e) => {
         return;
       } else {
         Log.warn('"' + args[0] + '"' + ' is not a valid argument.');
+        return;
     }})
   );
   serverCommands.register(
@@ -36,11 +37,14 @@ Events.on(ServerLoadEvent, (e) => {
         Core.settings.manualSave();
         Log.info('Set loading of auto-saves on server start to: ' + args[0]);
         (args[0] === 'true') && Core.settings.put('autosave', false);
+        (args[0] === 'true') && Core.settings.put('autoPause', true);
         (args[0] === 'true') && Log.info('Disabled default server auto-save.');
+        (args[0] === 'true') && Log.info('Enabled auto-pause config.');
         (args[0] === 'true') && Core.app.post(() => {SaveIO.save(saveFile);Log.info('Created initial save file.');});
         return;
       } else {
         Log.warn('"' + args[0] + '"' + ' is not a valid argument.');
+        return;
     }})
   );
   clientCommands.register(
@@ -52,8 +56,45 @@ Events.on(ServerLoadEvent, (e) => {
         let pauseToggle = Vars.state.serverPaused;
         pauseToggle = !pauseToggle;
         Vars.state.serverPaused = pauseToggle;
+        return;
       } else {
         player.sendMessage('[crimson]⚠ [white]Great try but, [crimson]you are not an admin[white].');
+        return;
+      }
+    })
+  );
+  clientCommands.register(
+    'setwave',
+    '<number>',
+    'Sets the wave to a number.',
+    runner((args, player) => {
+      let number;
+      number = Number(args[0]);
+      if (player.admin) {
+        if (!isNaN(number)) {
+          Vars.state.wave = number;
+          return;
+        } else {
+          player.sendMessage('[crimson]⚠ [white]Great try but, [crimson]' + args[0] + ' is not a number[white].');
+          return;
+        }
+      } else {
+        player.sendMessage('[crimson]⚠ [white]Great try but, [crimson]you are not an admin[white].');
+        return;
+        }
+    })
+  );
+  clientCommands.register(
+    'js',
+    '<script...>',
+    'Run arbitrary Javascript.',
+    runner((args, player) => {
+      if (player.admin) {
+        player.sendMessage("[accent][white] " + Vars.mods.getScripts().runConsole(args[0]));
+        return;
+      } else {
+        player.sendMessage('[crimson]⚠ [white]Great try but, [crimson]you are not an admin[white].');
+        return;
       }
     })
   );
